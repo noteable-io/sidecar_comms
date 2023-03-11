@@ -10,7 +10,7 @@ repository = "https://github.com/noteable-io/sidecar_comms"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-ipykernel = "^6.20.2"
+ipykernel = "^6.21.3"
 pydantic = "^1.10.2"
 
 [tool.poetry.group.dev.dependencies]
