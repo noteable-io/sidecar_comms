@@ -7,7 +7,11 @@ import traceback
 from ipykernel.comm import Comm
 from IPython import get_ipython
 
-from sidecar_comms.form_cells.base import FORM_CELL_CACHE, parse_as_form_cell
+from sidecar_comms.form_cells.base import (
+    FORM_CELL_CACHE,
+    parse_as_form_cell,
+    validate_datetime_value,
+)
 from sidecar_comms.handlers.variable_explorer import (
     get_kernel_variables,
     rename_kernel_variable,
@@ -67,6 +71,12 @@ def handle_msg(data: dict, comm: Comm) -> None:
     if inbound_msg == "update_form_cell":
         form_cell_id = data.pop("form_cell_id")
         form_cell = FORM_CELL_CACHE[form_cell_id]
+
+        if data["input_type"] == "datetime":
+            # specifically convert back to datetime object;
+            # otherwise the value variable will remain a string
+            data["value"] = validate_datetime_value(data["value"])
+
         form_cell.update(data)
         msg = CommMessage(
             body=form_cell.dict(),
